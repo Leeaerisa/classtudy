@@ -6,10 +6,14 @@
 	// 세션에 MemberDTO가 있는지 확인하고
 	// 있으면 member의 name을 String으로 저장한다.
 	String name = "";
+	int lectureNo = 0;
 	if(session.getAttribute("member") != null) {
 		MemberDTO member = (MemberDTO)session.getAttribute("member");
 		name = member.getName();
+		lectureNo = member.getLectureNo();
 		isLogin = true;
+	} else {
+		isLogin = false;
 	}
 %>
 <% if (isLogin) { %>
@@ -33,7 +37,7 @@
 							</a>
 							<ul class="dropdown-menu">
 								<li><a href="${path}/community/group">그룹</a></li>
-								<li><a href="${path}/community/board">자유게시판</a></li>
+								<li><a href="${path}/community/freeboard">자유게시판</a></li>
 								<li><a href="${path}/community/incruit">채용공고</a></li>
 							</ul>
 						</li>
@@ -45,8 +49,8 @@
 								클래스 <span class="caret"></span>
 							</a>
 							<ul class="dropdown-menu">
-								<li><a href="${path}/class/TIL">TIL</a></li>
-								<li><a href="${path}/class/classRoom">클래스룸</a></li>
+								<li><a href="${path}/class/writeTIL">TIL</a></li>
+								<li><a href="${path}/class/classroom">클래스룸</a></li>
 							</ul>
 						</li>
 						<li class="dropdown">
@@ -105,7 +109,7 @@ $(document).ready(function(){
 							</a>
 							<ul class="dropdown-menu">
 								<li><a href="${path}/community/group">그룹</a></li>
-								<li><a href="${path}/community/board">자유게시판</a></li>
+								<li><a href="${path}/community/freeboard">자유게시판</a></li>
 								<li><a href="${path}/community/incruit">채용공고</a></li>
 							</ul>
 						</li>
@@ -117,8 +121,8 @@ $(document).ready(function(){
 								클래스 <span class="caret"></span>
 							</a>
 							<ul class="dropdown-menu">
-								<li><a href="${path}/class/TIL">TIL</a></li>
-								<li><a href="${path}/class/classRoom">클래스룸</a></li>
+								<li><a href="${path}/class/writeTIL">TIL</a></li>
+								<li><a href="${path}/class/classroom">클래스룸</a></li>
 							</ul>
 						</li>				
 						<li><a href="${path}/member/login"><span class="glyphicon glyphicon-log-in"></span> 로그인</a></li>

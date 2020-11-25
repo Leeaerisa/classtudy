@@ -5,21 +5,43 @@
 
 <!-- 다른 mapper와 중복되지 않도록 네임스페이스를 기재한다. -->
 <mapper namespace="com.edu.mapper.FreeboardMapper">
-
 	<!-- 게시글 작성 -->
-	<insert id="writer" parameterType="com.edu.domain.FreeboardDTO">
+	<insert id="write" parameterType="com.edu.domain.FreeboardDTO">
 	INSERT	INTO freeboard
 			(WRITER, TITLE, CONTENT, writeDate, category) 
 	VALUES	(#{writer}, #{title}, #{content}, SYSDATE(), #{category} )
 	</insert>
+	<!-- 게시글 상세 보기 -->
+	<select id="boardDetail" resultType="com.edu.domain.FreeboardDTO">
+	SELECT 	* 
+	FROM 	freeboard 
+	WHERE 	boardNo = #{boardNo} 
+	</select>
+	<!-- 게시글 수정 -->
+	<update id="boardUpdate" >
+	UPDATE 	freeboard 
+	SET 	title = #{title}, content = #{content}, category = #{category} 
+	WHERE 	boardNo = #{boardNo} 
+	</update>
+	<!-- 게시글 조회수 증가 -->
+	<update id="addViews">
+	UPDATE 	freeboard 
+	SET 	views = views + 1 
+	WHERE 	boardNo = #{boardNo} 
+	</update>
+	<!-- 게시글 좋아요수 증가 -->
+	<update id="addLikes">
+	UPDATE 	freeboard 
+	SET 	likes = likes + 1 
+	WHERE 	boardNo = #{boardNo}
+	</update>
+	<!-- 게시글 삭제 -->
+	<delete id="boardDelete">
+	DELETE 
+	FROM 	freeboard 
+	WHERE 	boardNo = #{boardNo} 
+	</delete>
 	
-	<!-- 게시글 작성 
-	<insert id="writer">
-	INSERT	INTO freeboard
-			(WRITER,	title, 		CONTENT,	writeDate), 
-	VALUES	(#{writer},	#{title},	#{content},	SYSATE())
-	</insert>-->
-
 	<!-- 게시글 목록 -->	
 	<select id="boardList" resultType="com.edu.domain.FreeboardDTO">
 	SELECT	*
@@ -27,32 +49,64 @@
 	ORDER BY boardNo DESC
 	</select>
 	
-	<!-- 게시글 상세 보기 -->
-	<select id="boardDetail" resultType="com.edu.domain.FreeboardDTO">
-	SELECT 	* 
+	<!-- 게시글 목록 
+	<select id="boardList" resultType="com.edu.domain.FreeboardDTO">
+	SELECT	*, m.name writer
+	FROM	freeboard f INNER JOIN member m ON f.writer = m.memberId
+	AND		<![CDATA[f.boardNo < #{maxNo}]]>]]
+	ORDER BY boardNo DESC LIMIT 5
+	</select>-->	
+	
+	<!-- 게시판 목록 보기2 
+	<select id="boardList2" resultType="com.edu.domain.FreeboardDTO">
+	SELECT 	*, m.name writerName 
+	FROM 	freeboard c INNER JOIN member m ON c.writer = m.memberId 
+	AND 	c.lectureNo = #{lectureNo} 
+	AND 	<![CDATA[c.boardNo < #{maxNo}]]>
+	AND 	c.category = #{viewCategory} 
+	ORDER BY boardNo DESC LIMIT 5 
+	</select>-->
+	
+	<!-- 화면에 보여줄 게시글 개수 추출 >
+	<select id="getBoardCount" resultType="Integer">
+	SELECT 	COUNT(boardNo) 
 	FROM 	freeboard 
-	WHERE 	boardNo = #{boardNo} 
-	</select>
+	</select>-->
+	<!-- 화면에 보여줄 게시글 개수 추출2 
+	<select id="getBoardCount2" resultType="Integer">
+	SELECT 	COUNT(boardNo)
+	FROM 	freeboard 
+	AND 	category = #{viewCategory} 
+	</select>-->
 	
-	<!-- 게시글 조회수 증가 -->
-	<update id="addViews">
-	UPDATE 	freeboard 
-	SET 	views = views + 1 
-	WHERE 	boardNo = #{boardNo} 
-	</update>
-
-	<!-- 게시글 수정 -->
-	<update id="boardUpdate">
-	UPDATE 	freeboard 
-	SET 	title=#{title}, content=#{content}
-	WHERE 	boardNo = #{boardNo} 
-	</update>
+	<!-- 마지막 게시글 번호 추출 
+	<select id="getNextNum" resultType="Integer">
+	SELECT 	MAX(boardNo) 
+	FROM 	freeboard
+	</select>-->
+	<!-- 마지막 게시글 번호 추출2 
+	<select id="getNextNum2" resultType="Integer">
+	SELECT 	MAX(boardNo) 
+	FROM 	freeboard 
+	AND 	category = #{viewCategory} 
+	</select>-->
 	
-	<!-- 게시글 삭제 -->
-	<select id="boardDelete">
-	DELETE	FROM freeboard 
-	WHERE 	boardNo = #{boardNo} 
-	</select>
+	<!-- 게시글 검색 
+	<select id="search" resultType="com.edu.domain.FreeboardDTO">
+	SELECT 	*, m.name writer 
+	FROM 	freeboard f INNER JOIN member m ON f.writer = m.memberId 
+	AND 	c.lectureNo = #{lectureNo} 
+	WHERE 	c.title LIKE #{keyword} OR c.content LIKE #{keyword} 
+	ORDER BY boardNo DESC 
+	</select>-->
 	
-
+	<!-- 게시글 검색2
+	<select id="search2" resultType="com.edu.domain.FreeboardDTO">
+	SELECT 	*, m.name writer 
+	FROM 	freeboard f INNER JOIN member m ON f.writer = m.memberId 
+	AND 	f.category = #{viewCategory} 
+	WHERE 	f.title LIKE #{keyword} OR c.content LIKE #{keyword} 
+	ORDER BY boardNo DESC 
+	</select> -->
+		
 </mapper>

@@ -17,10 +17,10 @@
 	<header>
 		<h1>게시글 상세 정보</h1><br>
 	</header>
-	<form class="form-horizontal" action="/comunity/update/{boardNo}" method="post">
+	<form class="form-horizontal" action="/community/update/${board.boardNo}" method="post">
 		<div>
-			<!-- 숨겨서 넘길 정보들 -->
-			<input type="hidden" id="boardNo" name="boardNo" class="form-control" value="${detail.boardNo}" maxlength=16/>
+			<!-- 숨겨서 넘길 정보들 
+			<input type="hidden" id="boardNo" name="boardNo" class="form-control" value="${detail.boardNo}" maxlength=16/>-->
 			<input type="hidden" id="views" name="views" class="form-control" value="${detail.views}"/>
 			<input type="hidden" id="likes" name="likes" class="form-control" value="${detail.likes}"/>
 			<input type="hidden" id="memberId" name="memberId" class="form-control" value="${member.memberId}" maxlength="16"/>
@@ -29,7 +29,7 @@
 			<label class="control-label col-sm-2">말머리</label>
 			<div class="col-sm-3">
 				<input type="text" id="category" name="category" class="form-control" value="${detail.category}" readonly/>
-			</div>		
+			</div>
 		</div>
 		<div class="form-group">
 			<label class="control-label col-sm-2">작성자</label>
@@ -48,15 +48,16 @@
 			</div>
 		</div>
 		<div class="form-group">
-			<div id="test-markdown-view" style="display: block; width: 85%; margin: 0px auto; padding: 0px;">
+			<div id="test-markdown-view" style="display: block; width: 75%; height: 200px; resize: none; margin: 0px auto; padding: 0px; border: 2px solid #ccc;">
 				<textarea style="display:none;" id="content" name="content">${detail.content}</textarea>
 			</div>
 		</div>
 		<div class="form-group">
-			<div class="col-sm-12" style="text-align: center; padding-bottom: 25px;">
-				<!-- <button type="button" class="btn btn-info" id="previewBtn">preview</button> -->
-				<button type="button" class="btn btn-success" id="updateBtn" onclick="location.href='/community/update'">수정</button>&nbsp;
-				<button type="button" class="btn btn-danger" id="deleteBtn">삭제</button>&nbsp;
+			<div class="col-sm-12" style="text-align: center; padding-bottom: 25px; ">
+				<button type="button" class="btn btn-lg btn-default" id="likeBtn">
+					<span class="glyphicon glyphicon-thumbs-up"></span><br>좋아요</button><br><br>
+				<button type="button" class="btn btn-success" id="updateBtn" >수정</button>&nbsp;
+				<button type="button" class="btn btn-danger" id="deleteBtn" >삭제</button>&nbsp;
 				<button type="button" class="btn btn-primary" onclick="location.href='/community/freeboard'">목록</button>
 			</div>
 		</div>
@@ -78,7 +79,7 @@
 		$("#updateBtn").on("click", function() {
 			// 작성자와 로그인한 아이디가 같은지 확인
 			if(document.getElementById("writer").value == document.getElementById("memberId").value){
-				location.href="/comunity/update/${detail.boardNo}";
+				location.href="/community/update/${detail.boardNo}";
 			} else {
 				alert("수정할 수 있는 권한이 없습니다.");
 				return false;
@@ -91,12 +92,36 @@
 				if(confirm("정말 삭제하시겠습니까?") == false){
 					return false;
 				} else {
-					location.href="/comunity/delete/${detail.boardNo}";
+					location.href="/community/delete/${detail.boardNo}";
 				}
 			} else {
 				alert("삭제할 수 있는 권한이 없습니다.");
 				return false;
 			}
+		});
+		// 좋아요 버튼이 눌렸을 경우
+		$("#likeBtn").on("click", function() {
+			// 자신이 작성한 글은 좋아요를 누를 수 없다.
+			if($("#writer").val() == $("#memberId").val()) {
+				alert("본인의 글은 추천할 수 없습니다.");
+				return false;
+			}
+			// 해당 게시글의 좋아요수를 올린다.
+			$.ajax({
+				url: "/community/like/${detail.boardNo}",
+				type: "post",
+				dataType: "json",
+				data: {"boardNo" : $("#boardNo").val()},
+			});
+			/*
+			// 해당 게시글에 좋아요를 이미 눌렀는지 확인
+			if(false){
+				
+			} else {
+				alert("이미 좋아요를 누른 게시글입니다.");
+				return false;
+			}
+			*/
 		});
 		
 		/*

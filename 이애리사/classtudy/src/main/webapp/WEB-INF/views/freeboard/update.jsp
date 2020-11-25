@@ -17,7 +17,7 @@
 	<header>
 		<h1>게시글 수정</h1><br>
 	</header>
-	<form class="form-horizontal" action="/comunity/update" method="post">
+	<form class="form-horizontal" action="/community/update/${detail.boardNo}" method="post">
 		<div>
 			<!-- 숨겨서 넘길 정보들 -->
 			<input type="hidden" id="boardNo" name="boardNo" class="form-control" value="${detail.boardNo}" maxlength=16/>
@@ -28,28 +28,51 @@
 		<div class="form-group">
 			<label class="control-label col-sm-2">말머리</label>
 			<div class="col-sm-3">
-				<!-- <input type="text" id="category" name="category" class="form-control" value="${detail.category}" readonly/> -->
-				<c:if test="${detail.category == 'TIL'}">
-					<select id="category" name="category" class="form-control">
-						<option value="TIL" selected>TIL</option>
-						<option value="클래스">클래스</option>
+				<c:if test="${detail.category == '이야기'}">
+					<select id="category" name="category" class="form-control" >
+						<option value="이야기" selecte>이야기</option>
+						<option value="클래스">공지사항</option>
 						<option value="질문">질문</option>
+						<option value="클래스">정보</option>
+						<option value="질문">그룹홍보</option>
 					</select>
 				</c:if>
-				<c:if test="${detail.category == '클래스'}">
+				<c:if test="${detail.category == '공지사항'}">
 					<select id="category" name="category" class="form-control">
-						<option value="TIL">TIL</option>
-						<option value="클래스" selected>클래스</option>
+						<option value="이야기">이야기</option>
+						<option value="클래스" selected>공지사항</option>
 						<option value="질문">질문</option>
+						<option value="클래스">정보</option>
+						<option value="질문">그룹홍보</option>
 					</select>
 				</c:if>
 				<c:if test="${detail.category == '질문'}">
 					<select id="category" name="category" class="form-control">
-						<option value="TIL">TIL</option>
-						<option value="클래스">클래스</option>
+						<option value="이야기">이야기</option>
+						<option value="클래스">공지사항</option>
 						<option value="질문" selected>질문</option>
+						<option value="클래스">정보</option>
+						<option value="질문">그룹홍보</option>
 					</select>
-				</c:if>					
+				</c:if>
+				<c:if test="${detail.category == '정보'}">
+					<select id="category" name="category" class="form-control">
+						<option value="이야기">이야기</option>
+						<option value="클래스">공지사항</option>
+						<option value="질문">질문</option>
+						<option value="클래스" selected >정보</option>
+						<option value="질문">그룹홍보</option>
+					</select>
+				</c:if>
+				<c:if test="${detail.category == '그룹홍보'}">
+					<select id="category" name="category" class="form-control">
+						<option value="이야기">이야기</option>
+						<option value="클래스">공지사항</option>
+						<option value="질문" >질문</option>
+						<option value="클래스">정보</option>
+						<option value="질문" selected>그룹홍보</option>
+					</select>
+				</c:if>		
 			</div>
 		</div>
 		<div class="form-group">
@@ -57,6 +80,7 @@
 			<div class="col-sm-3">
 				<input type="text" id="writer" name="writer" class="form-control" value="${detail.writer}" readonly="readonly" maxlength=16/>
 			</div>
+
 			<label class="control-label col-sm-2">작성일</label>
 			<div class="col-sm-3">
 				<input type="text" id="writeDateView" name="writeDateView" class="form-control" value="<fmt:formatDate value="${detail.writeDate}" pattern="yyyy-MM-dd hh:mm:ss"/>" readonly/>
@@ -75,7 +99,7 @@
 		</div>
 		<div class="form-group">
 			<div class="col-sm-12" style="text-align: center;">
-				<button type="button" class="btn btn-success" onclick="classboardCheckForm(this.form)">수정</button>&nbsp;
+				<button type="submit" class="btn btn-success" onclick="/community/update/${detail.boardNo}">수정</button>&nbsp;
 				<button type="button" class="btn btn-warning cancel">취소</button>
 			</div>
 		</div>
@@ -91,7 +115,7 @@
 			if(confirm("정말 취소하시겠습니까?") == false){
 				return false;
 			} else {
-				location.href ="/class/detail/${detail.boardNo}";
+				location.href ="/community/detail/${detail.boardNo}";
 			}
 		});
 

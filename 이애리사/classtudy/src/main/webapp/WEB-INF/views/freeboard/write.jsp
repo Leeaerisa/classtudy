@@ -37,13 +37,11 @@
 			</div>
 			<!-- 숨겨서 넘길 정보들 -->
 			<input type="hidden" id="writer" name="writer" class="form-control" value="${member.memberId}" maxlength=16/>
-		<!--	<input type="hidden" id="views" name="views" class="form-control" value="${board.views}" maxlength=16/>
-			<input type="hidden" id="likes" name="likes" class="form-control" value="${board.likes}" maxlength=16/>-->
 		</div>
 		<div class="form-group">		
 			<label class="control-label col-sm-2">제&nbsp;&nbsp;&nbsp;목</label>
 			<div class="col-sm-7">
-				<input type="text" class="form-control" id="title" name="title" placeholder="제목" maxlength=50/>
+				<input class="form-control" type="text" id="title" name="title" placeholder="제목" maxlength=50/>
 			</div>
 		</div>
 		<div class="form-group">
@@ -63,7 +61,7 @@
 		<div class="form-group">
 			<div class="col-sm-offset-0 col-sm-12" style="text-align: center;">
 			<!-- <div class="col-sm-9" align="right">-->
-				<button type="submit" class="btn btn-success" id="submit">등록</button>&nbsp;
+				<button type="button" class="btn btn-success" onclick="fbCheckForm(this.form)">등록</button>&nbsp;
 				<button type="button" class="btn btn-warning cancel">취소</button>	
 			</div>
 		</div>

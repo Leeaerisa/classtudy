@@ -48,97 +48,158 @@
 				<div class="btn-group">
 				<!-- 말머리 선택 : 선택된 말머리의 글만 표시 -->		
 				<select class="form-control" id="viewCategory" name="viewCategory" onchange="location.href=this.value" >
-					<c:if test="${viewCategory == 'all'}">					
-						<option value="이야기" selected>이야기</option>
-						<option value="클래스">공지사항</option>
-						<option value="질문">질문</option>
-						<option value="클래스">정보</option>
-						<option value="질문">그룹홍보</option>
-					</c:if>
-					<c:if test="${viewCategory == '이야기'}">				
-						<option value="이야기" selected>이야기</option>
-						<option value="클래스">공지사항</option>
-						<option value="질문">질문</option>
-						<option value="클래스">정보</option>
-						<option value="질문">그룹홍보</option>					
-					</c:if>
-					<c:if test="${viewCategory == '공지사항'}">					
+					<c:if test="${viewCategory == 'all'}">
+						<option value="all" selected>전체</option>		
 						<option value="이야기">이야기</option>
-						<option value="클래스" selected>공지사항</option>
+						<option value="공지사항">공지사항</option>
 						<option value="질문">질문</option>
 						<option value="클래스">정보</option>
-						<option value="질문">그룹홍보</option>
+						<option value="그룹홍보">그룹홍보</option>
 					</c:if>
-					<c:if test="${viewCategory == '질문'}">					
+					<c:if test="${viewCategory == '이야기'}">
+						<option value="all">전체</option>				
+						<option value="이야기" selected>이야기</option>
+						<option value="공지사항">공지사항</option>
+						<option value="질문">질문</option>
+						<option value="클래스">정보</option>
+						<option value="그룹홍보">그룹홍보</option>					
+					</c:if>
+					<c:if test="${viewCategory == '공지사항'}">
+						<option value="all">전체</option>				
 						<option value="이야기">이야기</option>
-						<option value="클래스">공지사항</option>
+						<option value="공지사항" selected>공지사항</option>
+						<option value="질문">질문</option>
+						<option value="클래스">정보</option>
+						<option value="그룹홍보">그룹홍보</option>
+					</c:if>
+					<c:if test="${viewCategory == '질문'}">	
+						<option value="all">전체</option>				
+						<option value="이야기">이야기</option>
+						<option value="공지사항">공지사항</option>
 						<option value="질문" selected>질문</option>
 						<option value="클래스">정보</option>
-						<option value="질문">그룹홍보</option>					
+						<option value="그룹홍보">그룹홍보</option>					
 					</c:if>
-					<c:if test="${viewCategory == '정보'}">				
+					<c:if test="${viewCategory == '정보'}">
+						<option value="all">전체</option>				
 						<option value="이야기">이야기</option>
-						<option value="클래스">공지사항</option>
+						<option value="공지사항">공지사항</option>
 						<option value="질문" >질문</option>
 						<option value="클래스"selected>정보</option>
 						<option value="질문">그룹홍보</option>					
 					</c:if>
-					<c:if test="${viewCategory == '그룹홍보'}">				
+					<c:if test="${viewCategory == '그룹홍보'}">
+						<option value="all">전체</option>				
 						<option value="이야기">이야기</option>
-						<option value="클래스">공지사항</option>
-						<option value="질문" >질문</option>
+						<option value="공지사항">공지사항</option>
+						<option value="질문">질문</option>
 						<option value="클래스">정보</option>
-						<option value="질문" selected>그룹홍보</option>					
-					</c:if>	
+						<option value="그룹홍보" selected>그룹홍보</option>					
+					</c:if>		
 				</select>	
 			</div>
-			<td class="col-sm-12" style="text-align: right; padding-bottom: 20px;">
-				<button class="btn btn-warning" onclick="location.href='/community/write'">글쓰기</button><br><br>		
+			<td align=right style="padding-bottom: 15px; padding-right: 20px;">
+				<button class="btn btn-success" onclick="location.href='/community/write'">작성</button>		
 			</td>
 		</tr>
 	</table>
 	<table class="table table-hover table-bordered">
 		<thead>
 			<tr>
-				<th style="text-align: center;">글번호</th>
+				<th style="text-align: center;">번 호</th>
 				<th style="text-align: center;">말머리</th>
-				<th style="text-align: center;">제  목</th>
+				<th style="text-align: center;">제 목</th>
 				<th style="text-align: center;">작성자</th>
 				<th style="text-align: center;">작성일</th>
-				<th style="text-align: center;">조회수</th>
-				<th style="text-align: center;">좋아요</th>
+				<th style="text-align: center;">조 회</th>
+				<th style="text-align: center;">추 천</th>
 			</tr>
 		</thead>
-			<c:forEach var="board" items="${list}">
-			<tr align="center">				
-				<td>${board.boardNo}</td>
-				<td>${board.category}</td>
-				<td><a href="/community/detail/${board.boardNo}">${board.title}</a></td>
-				<td>${board.writer}</td>				
-				<td><fmt:formatDate value="${board.writeDate}" pattern="yyyy-MM-dd hh:mm:ss"/></td>
-				<td>${board.views}</td>
-				<td>${board.likes}</td>
-			</tr>
-			</c:forEach>
 		<tbody>
+			<c:forEach var="board" items="${list}">
+				<tr align="center">				
+					<td>${board.boardNo}</td>
+					<td>${board.category}</td>
+					<td><a href="/community/detail/${board.boardNo}">${board.title}</a></td>
+					<td>${board.writer}</td>				
+					<td><fmt:formatDate value="${board.writeDate}" pattern="yyyy-MM-dd"/></td>
+					<td>${board.views}</td>
+					<td>${board.likes}</td>
+				</tr>
+			</c:forEach>
 		</tbody>
 	</table>
+	<!-- 하단 부분 테이블 형태로 구성 -->
 	<table style="width: 100%;">
 		<tr>
 			<!-- 검색 -->
 			<td align=center style="padding-bottom: 15px;">
-				<div class="input-group col-sm-4">
-					<input type="text" id="keyword" name="keyword" class="form-control" placeholder="검색어를 입력하세요." maxlength=50/>
+				<div class="input-group col-sm-5">
+					<div class="input-group-btn btn-group">
+						<!-- 말머리 선택 : 선택된 말머리의 글만 표시 -->
+						<select class="form-control" id="searchCategory" name="searchCategory" style="width: 90px;">
+							<c:if test="${viewCategory == 'all'}">	
+								<option value="all" selected>전체</option>		
+								<option value="이야기">이야기</option>
+								<option value="공지사항">공지사항</option>
+								<option value="질문">질문</option>
+								<option value="클래스">정보</option>
+								<option value="그룹홍보">그룹홍보</option>
+							</c:if>
+							<c:if test="${viewCategory == '이야기'}">
+								<option value="all">전체</option>				
+								<option value="이야기" selected>이야기</option>
+								<option value="공지사항">공지사항</option>
+								<option value="질문">질문</option>
+								<option value="클래스">정보</option>
+								<option value="그룹홍보">그룹홍보</option>					
+							</c:if>
+							<c:if test="${viewCategory == '공지사항'}">
+								<option value="all">전체</option>				
+								<option value="이야기">이야기</option>
+								<option value="공지사항" selected>공지사항</option>
+								<option value="질문">질문</option>
+								<option value="클래스">정보</option>
+								<option value="그룹홍보">그룹홍보</option>
+							</c:if>
+							<c:if test="${viewCategory == '질문'}">	
+								<option value="all">전체</option>				
+								<option value="이야기">이야기</option>
+								<option value="공지사항">공지사항</option>
+								<option value="질문" selected>질문</option>
+								<option value="클래스">정보</option>
+								<option value="그룹홍보">그룹홍보</option>					
+							</c:if>
+							<c:if test="${viewCategory == '정보'}">
+								<option value="all">전체</option>				
+								<option value="이야기">이야기</option>
+								<option value="공지사항">공지사항</option>
+								<option value="질문" >질문</option>
+								<option value="클래스"selected>정보</option>
+								<option value="질문">그룹홍보</option>					
+							</c:if>
+							<c:if test="${viewCategory == '그룹홍보'}">
+								<option value="all">전체</option>				
+								<option value="이야기">이야기</option>
+								<option value="공지사항">공지사항</option>
+								<option value="질문">질문</option>
+								<option value="클래스">정보</option>
+								<option value="그룹홍보" selected>그룹홍보</option>					
+							</c:if>	
+						</select>
+					</div>							
+					<input type="text" id="keyword" name="keyword" class="form-control" value="${nowKeyword}" placeholder="검색어를 입력하세요." maxlength=50/>
 					<span class="input-group-btn">
 						<button class="btn btn-info" id="searchBtn"><span class="glyphicon glyphicon-search"></span></button>
-					</span>
+					</span>					
 				</div>
 			</td>
 		</tr>
 	</table>
 	<!-- 페이지 이동 -->
 	<footer>
-
+		<div class="btn-group" role="group">
+		</div>
 	</footer>
 </div>
 <%@ include file="../include/footer.jsp" %>
@@ -149,7 +210,7 @@
 		$("#searchBtn").on("click", function() {
 			// 검색어가 입력되었는지 확인
 			if($("#keyword").val() != ""){
-				location.href="/community/search/" + $("#keyword").val() + "/all";
+				location.href="/community/search/" + $("#keyword").val();
 			} else {
 				alert("검색어를 입력해주세요.");
 				return false;

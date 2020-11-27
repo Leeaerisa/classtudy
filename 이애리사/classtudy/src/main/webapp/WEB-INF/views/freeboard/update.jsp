@@ -30,47 +30,47 @@
 			<div class="col-sm-3">
 				<c:if test="${detail.category == '이야기'}">
 					<select id="category" name="category" class="form-control" >
-						<option value="이야기" selecte>이야기</option>
-						<option value="클래스">공지사항</option>
+						<option value="이야기" selected>이야기</option>
+						<option value="공지사항">공지사항</option>
 						<option value="질문">질문</option>
 						<option value="클래스">정보</option>
-						<option value="질문">그룹홍보</option>
+						<option value="그룹홍보">그룹홍보</option>	
 					</select>
 				</c:if>
 				<c:if test="${detail.category == '공지사항'}">
 					<select id="category" name="category" class="form-control">
 						<option value="이야기">이야기</option>
-						<option value="클래스" selected>공지사항</option>
+						<option value="공지사항" selected>공지사항</option>
 						<option value="질문">질문</option>
 						<option value="클래스">정보</option>
-						<option value="질문">그룹홍보</option>
+						<option value="그룹홍보">그룹홍보</option>
 					</select>
 				</c:if>
 				<c:if test="${detail.category == '질문'}">
 					<select id="category" name="category" class="form-control">
 						<option value="이야기">이야기</option>
-						<option value="클래스">공지사항</option>
+						<option value="공지사항">공지사항</option>
 						<option value="질문" selected>질문</option>
 						<option value="클래스">정보</option>
-						<option value="질문">그룹홍보</option>
+						<option value="그룹홍보">그룹홍보</option>
 					</select>
 				</c:if>
 				<c:if test="${detail.category == '정보'}">
 					<select id="category" name="category" class="form-control">
 						<option value="이야기">이야기</option>
-						<option value="클래스">공지사항</option>
-						<option value="질문">질문</option>
-						<option value="클래스" selected >정보</option>
+						<option value="공지사항">공지사항</option>
+						<option value="질문" >질문</option>
+						<option value="클래스"selected>정보</option>
 						<option value="질문">그룹홍보</option>
 					</select>
 				</c:if>
 				<c:if test="${detail.category == '그룹홍보'}">
 					<select id="category" name="category" class="form-control">
 						<option value="이야기">이야기</option>
-						<option value="클래스">공지사항</option>
-						<option value="질문" >질문</option>
+						<option value="공지사항">공지사항</option>
+						<option value="질문">질문</option>
 						<option value="클래스">정보</option>
-						<option value="질문" selected>그룹홍보</option>
+						<option value="그룹홍보" selected>그룹홍보</option>
 					</select>
 				</c:if>		
 			</div>
@@ -99,7 +99,7 @@
 		</div>
 		<div class="form-group">
 			<div class="col-sm-12" style="text-align: center;">
-				<button type="submit" class="btn btn-success" onclick="/community/update/${detail.boardNo}">수정</button>&nbsp;
+				<button type="button" class="btn btn-success" onclick="freeboardCheckForm(this.form)">수정</button>&nbsp;
 				<button type="button" class="btn btn-warning cancel">취소</button>
 			</div>
 		</div>

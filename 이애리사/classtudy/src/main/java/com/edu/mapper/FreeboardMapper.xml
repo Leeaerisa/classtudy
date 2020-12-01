@@ -20,7 +20,7 @@
 	<!-- 게시글 수정 -->
 	<update id="boardUpdate" >
 	UPDATE 	freeboard 
-	SET 	title = #{title}, content = #{content}, category = #{category} 
+	SET 	TITLE = #{title}, CONTENT = #{content}, category = #{category} 
 	WHERE 	boardNo = #{boardNo} 
 	</update>
 	<!-- 게시글 조회수 증가 -->
@@ -29,84 +29,105 @@
 	SET 	views = views + 1 
 	WHERE 	boardNo = #{boardNo} 
 	</update>
+	<!-- 게시글 삭제 -->
+	<delete id="boardDelete">
+	DELETE 
+	FROM 	freeboard 
+	WHERE 	boardNo = #{boardNo}
+	</delete>	
+	<!-- 게시글 검색1-->
+	<select id="search" resultType="com.edu.domain.FreeboardDTO">
+	SELECT	f.*, m.name writerName
+	FROM 	freeboard f inner join member m on f.writer = m.memberId
+	AND 	f.title like #{keyword} or f.content like #{keyword}
+	ORDER BY boardNo DESC LIMIT #{startNo}, #{numOfPage}
+	</select>	
+	<!-- 게시글 검색2-->
+	<select id="search2" resultType="com.edu.domain.FreeboardDTO">
+	SELECT 	f.*, m.name writerName
+	FROM 	freeboard f inner join member m on f.writer = m.memberId
+	AND 	f.title LIKE #{keyword} OR f.content LIKE #{keyword} 
+	WHERE 	f.category = #{viewCategory} 
+	ORDER BY boardNo DESC LIMIT #{startNo}, #{numOfPage}
+	</select>	
+	<!-- 게시글 목록1 -->	
+	<select id="boardList" resultType="com.edu.domain.FreeboardDTO">
+    SELECT	f.*, m.name writerName
+    FROM	freeboard f INNER JOIN member m on f.writer = m.memberId    
+ 	ORDER BY boardNo DESC LIMIT #{startNo}, #{numOfPage} 
+	</select>	
+	<!-- 게시글 목록2 -->	
+	<select id="boardList2" resultType="com.edu.domain.FreeboardDTO">
+    SELECT	f.*, m.name writerName
+    FROM	freeboard f INNER JOIN member m on f.writer = m.memberId
+    AND		f.category = #{viewCategory} 
+    ORDER BY boardNo DESC LIMIT #{startNo}, #{numOfPage} 
+	</select>	
+	<!-- 화면에 보여줄 게시글 개수 추출1 -->
+	<select id="getBoardCount" resultType="Integer">
+	SELECT 	COUNT(boardNo) 
+	FROM 	freeboard 
+	</select>	
+	<!-- 화면에 보여줄 게시글 개수 추출2 -->
+	<select id="getBoardCount2" resultType="Integer">
+	SELECT 	COUNT(boardNo)
+	FROM 	freeboard 
+	WHERE 	category = #{viewCategory} 
+	</select>	
+	<!-- 화면에 보여줄 게시글 개수 추출1 (검색시) -->
+	<select id="getSearchCount" resultType="Integer">
+	SELECT 	COUNT(boardNo) 
+	FROM 	freeboard 
+	WHERE 	(title LIKE #{keyword} OR content LIKE #{keyword}) 
+	</select>	
+	<!-- 화면에 보여줄 게시글 개수 추출2 (검색시) -->
+	<select id="getSearchCount2" resultType="Integer">
+	SELECT 	COUNT(boardNo) 
+	FROM 	freeboard
+	WHERE 	category = #{viewCategory}
+	AND 	(title LIKE #{keyword} OR content LIKE #{keyword})	
+	</select>
+
 	<!-- 게시글 좋아요수 증가 -->
 	<update id="addLikes">
 	UPDATE 	freeboard 
 	SET 	likes = likes + 1 
 	WHERE 	boardNo = #{boardNo}
 	</update>
-	<!-- 게시글 삭제 -->
-	<delete id="boardDelete">
-	DELETE 
+	<!-- 좋아요 내용 기록 -->
+	<insert id="writeLikes">
+	INSERT INTO fblikes 
+			(memberId, boardNo) 
+	VALUES 	(#{memberId}, #{boardNo})
+	</insert>	
+	<!-- 게시글 좋아요수 가져오기 -->
+	<select id="getLikes" resultType="int">
+	SELECT 	likes 
 	FROM 	freeboard 
 	WHERE 	boardNo = #{boardNo} 
+	</select>
+	<!-- 게시글 좋아요 여부 검사 -->
+	<select id="likeCheck" resultType="int">
+	SELECT 	COUNT(*) 
+	FROM 	fblikes 
+	WHERE 	boardNo = #{boardNo} 
+	AND 	memberId = #{memberId} 
+	</select>	
+	<!-- 게시글 좋아요수 감소 -->
+	<update id="subtractLikes">
+	UPDATE 	freeboard 
+	SET 	likes = likes - 1 
+	WHERE 	boardNo = #{boardNo}
+	</update>
+	<!-- 좋아요 내용 삭제 -->
+	<delete id="deleteLikes">
+	DELETE 
+	FROM 	fblikes 
+	WHERE 	boardNo = #{boardNo} 
+	AND 	memberId = #{memberId} 
 	</delete>
 	
-	<!-- 게시글 목록 -->	
-	<select id="boardList" resultType="com.edu.domain.FreeboardDTO">
-	SELECT	*
-	FROM	freeboard
-	ORDER BY boardNo DESC
-	</select>
 	
-	<!-- 게시글 목록 
-	<select id="boardList" resultType="com.edu.domain.FreeboardDTO">
-	SELECT	*, m.name writer
-	FROM	freeboard f INNER JOIN member m ON f.writer = m.memberId
-	AND		<![CDATA[f.boardNo < #{maxNo}]]>]]
-	ORDER BY boardNo DESC LIMIT 5
-	</select>-->	
 	
-	<!-- 게시판 목록 보기2 
-	<select id="boardList2" resultType="com.edu.domain.FreeboardDTO">
-	SELECT 	*, m.name writerName 
-	FROM 	freeboard c INNER JOIN member m ON c.writer = m.memberId 
-	AND 	c.lectureNo = #{lectureNo} 
-	AND 	<![CDATA[c.boardNo < #{maxNo}]]>
-	AND 	c.category = #{viewCategory} 
-	ORDER BY boardNo DESC LIMIT 5 
-	</select>-->
-	
-	<!-- 화면에 보여줄 게시글 개수 추출 >
-	<select id="getBoardCount" resultType="Integer">
-	SELECT 	COUNT(boardNo) 
-	FROM 	freeboard 
-	</select>-->
-	<!-- 화면에 보여줄 게시글 개수 추출2 
-	<select id="getBoardCount2" resultType="Integer">
-	SELECT 	COUNT(boardNo)
-	FROM 	freeboard 
-	AND 	category = #{viewCategory} 
-	</select>-->
-	
-	<!-- 마지막 게시글 번호 추출 
-	<select id="getNextNum" resultType="Integer">
-	SELECT 	MAX(boardNo) 
-	FROM 	freeboard
-	</select>-->
-	<!-- 마지막 게시글 번호 추출2 
-	<select id="getNextNum2" resultType="Integer">
-	SELECT 	MAX(boardNo) 
-	FROM 	freeboard 
-	AND 	category = #{viewCategory} 
-	</select>-->
-	
-	<!-- 게시글 검색 
-	<select id="search" resultType="com.edu.domain.FreeboardDTO">
-	SELECT 	*, m.name writer 
-	FROM 	freeboard f INNER JOIN member m ON f.writer = m.memberId 
-	AND 	c.lectureNo = #{lectureNo} 
-	WHERE 	c.title LIKE #{keyword} OR c.content LIKE #{keyword} 
-	ORDER BY boardNo DESC 
-	</select>-->
-	
-	<!-- 게시글 검색2
-	<select id="search2" resultType="com.edu.domain.FreeboardDTO">
-	SELECT 	*, m.name writer 
-	FROM 	freeboard f INNER JOIN member m ON f.writer = m.memberId 
-	AND 	f.category = #{viewCategory} 
-	WHERE 	f.title LIKE #{keyword} OR c.content LIKE #{keyword} 
-	ORDER BY boardNo DESC 
-	</select> -->
 		
 </mapper>

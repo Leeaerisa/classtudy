@@ -26,9 +26,13 @@ public class FreeboardDTO {
 	private	Date	writeDate;	//작성일자
 	private	String	tags;		//태그
 	
+	// Member Table에 있는 name 컬럼의 값
+	// writer = memberId일 때의 값을 가져온다.
+	private String 	writerName;
+	
+	// Cbcomment Table에 있는 댓글의 개수
+	// 게시글 번호(boardNo)에 해당하는 값을 가져온다.
+	private int 	commentNum;
+	
 	public FreeboardDTO() {}
-	/*
-	@ManyToOne(targetEntity = MemberDTO.class)
-	private MemberDTO member;
-	*/
 }

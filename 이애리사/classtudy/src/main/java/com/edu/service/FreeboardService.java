@@ -35,6 +35,7 @@ public class FreeboardService {
 	}
 	//게시글 수정
 	public int boardUpdate(FreeboardDTO boardDTO) throws Exception {
+		LOGGER.info("Service update : " + boardDTO);
 		return freeboardMapper.boardUpdate(boardDTO);		
 	}
 	//게시글 삭제
@@ -45,44 +46,62 @@ public class FreeboardService {
 	public int addViews(int boardNo) throws Exception{
 		return freeboardMapper.addViews(boardNo);
 	}
+	//게시글 목록
+	public List<FreeboardDTO> boardList(int startNo, int numOfPage) throws Exception{
+		return freeboardMapper.boardList(startNo, numOfPage);		
+	}
+	// 게시판 목록 보기 - 정해진 말머리만
+	public List<FreeboardDTO> boardList2( String viewCategory, int startNo, int numOfPage) throws Exception {
+		return freeboardMapper.boardList2(viewCategory, startNo, numOfPage);
+	}
+	// 화면에 보여줄 게시글 개수 추출
+	public int getBoardCount() throws Exception {
+		return freeboardMapper.getBoardCount();
+	}
+	// 화면에 보여줄 게시글 개수 추출
+	public int getBoardCount2(String viewCategory) throws Exception {
+		return freeboardMapper.getBoardCount2(viewCategory);
+	}	
+	// 게시글 검색
+	public List<FreeboardDTO> search(String keyword, int startNo, int numOfPage) throws Exception {	
+		return freeboardMapper.search(keyword, startNo,numOfPage);
+	}
+	// 게시글 검색 - 정해진 말머리만
+	public List<FreeboardDTO> search2(String keyword, String viewCategory, int startNo, int numOfPage) throws Exception {		
+		return freeboardMapper.search2(keyword, viewCategory,startNo, numOfPage);
+	}
+	// 화면에 보여줄 게시글 개수 추출 - 검색 했을 때
+	public int getSearchCount(String keyword) throws Exception {
+		return freeboardMapper.getSearchCount(keyword);
+	}
+	// 화면에 보여줄 게시글 개수 추출 - 정해진 말머리만, 검색 했을 때
+	public int getSearchCount2(String viewCategory, String keyword) throws Exception {
+		return freeboardMapper.getSearchCount2(viewCategory, keyword);
+	}
 	// 게시글 좋아요수 증가
 	public int addLikes(int boardNo) throws Exception  {
 		return freeboardMapper.addLikes(boardNo);
 	}
-	//게시글 목록
-	public List<FreeboardDTO> boardList() throws Exception{
-		return freeboardMapper.boardList();		
+	// 좋아요 테이블에 좋아요 내용 기록
+	public int writeLikes(int boardNo, String memberId) throws Exception {
+		return freeboardMapper.writeLikes(boardNo, memberId);		
 	}
-	// 게시판 목록 보기 - 정해진 말머리만
-	public List<FreeboardDTO> boardList2( String viewCategory, int maxNo) throws Exception {
-		return freeboardMapper.boardList2(viewCategory, maxNo);
+	// 게시글 좋아요수 가져오기
+	public int getLikes(int boardNo) throws Exception {
+		return freeboardMapper.getLikes(boardNo);
 	}
-	
-	// 화면에 보여줄 게시글 개수 추출
-	public int getBoardCount(String viewCategory) throws Exception {
-		return freeboardMapper.getBoardCount();
+	// 게시글 좋아요 여부 검사
+	public int likeCheck(int boardNo, String memberId) throws Exception {
+		return freeboardMapper.likeCheck(boardNo, memberId);
 	}
-	// 화면에 보여줄 게시글 개수 추출 - 정해진 말머리만
-	public int getBoardCount2(String viewCategory) throws Exception {
-		return freeboardMapper.getBoardCount2(viewCategory);
+	// 게시글 좋아요수 감소
+	public int subtractLikes(int boardNo) throws Exception {
+		return freeboardMapper.subtractLikes(boardNo);
 	}
-	//마지막 게시글 번호 추출
-	public int getNextNum() throws Exception {
-		return freeboardMapper.getNextNum() + 1;
+	// 좋아요 테이블에 좋아요 내용 삭제
+	public int deleteLikes(int boardNo, String memberId) throws Exception {
+		return freeboardMapper.deleteLikes(boardNo, memberId);
 	}
-	//마지막 게시글 번호 추출 - 정해진 말머리만
-	public int getNextNum2(String viewCategory) throws Exception {
-		return freeboardMapper.getNextNum2(viewCategory) + 1;
-	}
-	//게시글 검색
-	public List<FreeboardDTO> search(String keyword) throws Exception {		
-		return freeboardMapper.search(keyword);
-	}
-	//게시글 검색(정해진 말머리)
-	public List<FreeboardDTO> search2(String keyword, String viewCategory) throws Exception {
-		return freeboardMapper.search2(keyword, viewCategory);
-	}
-
 		
 		
 }

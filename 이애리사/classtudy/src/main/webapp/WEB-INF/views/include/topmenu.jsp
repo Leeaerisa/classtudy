@@ -39,7 +39,7 @@
 							</a>
 							<ul class="dropdown-menu">
 								<li><a href="${path}/community/group">그룹</a></li>
-								<li><a href="${path}/community/freeboard">자유게시판</a></li>
+								<li><a href="${path}/community/freeboard/all">자유게시판</a></li>
 								<li><a href="${path}/community/incruit">채용공고</a></li>
 							</ul>
 						</li>
@@ -104,7 +104,7 @@
 							</a>
 							<ul class="dropdown-menu">
 								<li><a href="${path}/community/group">그룹</a></li>
-								<li><a href="${path}/community/freeboard">자유게시판</a></li>
+								<li><a href="${path}/community/freeboard/all">자유게시판</a></li>
 								<li><a href="${path}/community/incruit">채용공고</a></li>
 							</ul>
 						</li>

@@ -7,7 +7,7 @@
 <html>
 <head>
 	<meta charset="UTF-8">
-	<title>게시글 상세 정보</title>
+	<title>자유게시판</title>
 	<%@ include file="../include/header.jsp" %>
 </head>
 <body>
@@ -17,12 +17,14 @@
 	<header>
 		<h1>게시글 상세 정보</h1><br>
 	</header>
-	<form class="form-horizontal" action="/community/update/${board.boardNo}" method="post">
+	<form class="form-horizontal" action="/community/update/{boardNo}" method="post">
 		<div>
-			<!-- 숨겨서 넘길 정보들 
-			<input type="hidden" id="boardNo" name="boardNo" class="form-control" value="${detail.boardNo}" maxlength=16/>-->
+			<!-- 숨겨서 넘길 정보들 -->
+			<input type="hidden" id="comment" name="comment" class="form-control" value="${comment}"/>
+			<input type="hidden" id="boardNo" name="boardNo" class="form-control" value="${detail.boardNo}" maxlength=16/>
 			<input type="hidden" id="views" name="views" class="form-control" value="${detail.views}"/>
 			<input type="hidden" id="likes" name="likes" class="form-control" value="${detail.likes}"/>
+			<input type="hidden" id="writer" name="writer" class="form-control" value="${detail.writer}" maxlength=16/>
 			<input type="hidden" id="memberId" name="memberId" class="form-control" value="${member.memberId}" maxlength="16"/>
 		</div>
 		<div class="form-group">
@@ -34,11 +36,12 @@
 		<div class="form-group">
 			<label class="control-label col-sm-2">작성자</label>
 			<div class="col-sm-3">
-				<input type="text" id="writer" name="writer" class="form-control" value="${detail.writer}" maxlength=16 readonly/>
+				<!-- <input type="text" id="writerName" name="writerName" class="form-control" value="${detail.writerName}" maxlength=16 readonly/>-->
+				<input type="text" id="writerName" name="writerName" class="form-control" value="${detail.writer}(${member.name})" maxlength=16 readonly/>				
 			</div>
 			<label class="control-label col-sm-2">작성일</label>
 			<div class="col-sm-3">
-				<input type="text" id="writeDate" name="writeDate" class="form-control" value="<fmt:formatDate value="${detail.writeDate}" pattern="yyyy-MM-dd hh:mm:ss"/>" readonly/>
+				<input type="text" id="writeDate" name="writeDate" class="form-control" value="<fmt:formatDate value="${detail.writeDate}" pattern="yyyy-MM-dd hh:mm"/>" readonly/>
 			</div>
 		</div>
 		<div class="form-group">
@@ -53,18 +56,37 @@
 			</div>
 		</div>
 		<div class="form-group">
-			<div class="col-sm-12" style="text-align: center; padding-bottom: 25px; ">
-				<button type="button" class="btn btn-lg btn-default" id="likeBtn">
-					<span class="glyphicon glyphicon-thumbs-up"></span><br>좋아요</button><br><br>
-				<button type="button" class="btn btn-success" id="updateBtn" >수정</button>&nbsp;
-				<button type="button" class="btn btn-danger" id="deleteBtn" >삭제</button>&nbsp;
-				<button type="button" class="btn btn-primary" onclick="location.href='/community/freeboard'">목록</button>
+			<div class="col-sm-12" style="text-align: center; padding-bottom: 10px;">
+				<button type="button" class="btn btn-lg btn-default" id="likeBtn" value="N" onclick="likefBoard(this.form)"
+					><span class="glyphicon glyphicon-thumbs-up"></span>&nbsp;좋아요&nbsp;${detail.likes}</button><br><br>
+				<button type="button" class="btn btn-success" id="updateBtn">수정</button>&nbsp;
+				<button type="button" class="btn btn-danger" id="deleteBtn">삭제</button>&nbsp;
+				<button type="button" class="btn btn-primary" onclick="location.href='/community/freeboard/all'">목록</button>
 			</div>
 		</div>
 	</form>
+	<!-- 댓글 영역 -->
+	<div class="container col-sm-12" style="padding-bottom: 50px;">
+		<div class="panel panel-default" style="width: 95%; margin: 0px auto;">
+			<!-- 저장된 댓글 보여줄 영역 -->
+			<div class="panel-body" id="commentList"></div>
+			<!-- 댓글 입력 영역 -->
+			<div class="panel-footer">
+				<label class="control-label col-sm-2">${member.name} (${member.memberId})</label>
+				<div class="input-group col-sm-9">
+					<!-- <textarea class="form-control" id="commentContent" name="commentContent" placeholder="댓글을 입력하세요."></textarea> -->
+					<input type="text" class="form-control" id="commentContent" name="commentContent" placeholder="댓글을 입력하세요."/>
+					<span class="input-group-btn">
+						<button class="btn btn-warning" type="button" id="commentInsertBtn">등록</button>
+					</span>
+				</div>
+			</div>
+		</div>		
+	</div>
 </div>
 	
 	<%@ include file="../include/footer.jsp" %>
+	<script src="/static/js/fbcommentAction.js"></script>
 	<script>
 	$(document).ready(function() {
 
@@ -75,6 +97,27 @@
 			//htmlDecode : "style,script,iframe"  // Note: If enabled, you should filter some dangerous HTML tags for website security.
 		});
 		
+		// 좋아요 누른 게시글인지 확인
+		checkfbLikes($("#boardNo").val(), $("#memberId").val());	
+			
+		// 게시글에 댓글이 있으면 댓글을 보여준다.
+		commentList();
+
+		// 댓글 뱃지를 누르고 들어왔으면 댓글 위치로 이동
+		if (document.getElementById("comment").value == "yes") {
+			//document.getElementById("commentList").scrollIntoView(true);
+			var divPosition = $("#commentList").offset();
+			$("html, body").animate({scrollTop: divPosition.top});
+		}
+		// 댓글 등록 버튼이 눌렸을 경우
+		$("#commentInsertBtn").on("click", function() {
+			//commentInsert($("#writer").val(), $("#content").val(), $("#boardNo").val());
+			commentInsert($("#commentContent").val());
+		});
+		// 댓글창에서 엔터키를 입력할 경우
+		$("#commentContent").keyup(function(e) { if(e.keyCode == 13) {
+			commentInsert($("#commentContent").val());
+		}});		
 		// 수정 버튼이 눌렸을 경우
 		$("#updateBtn").on("click", function() {
 			// 작성자와 로그인한 아이디가 같은지 확인
@@ -99,6 +142,8 @@
 				return false;
 			}
 		});
+
+		/*
 		// 좋아요 버튼이 눌렸을 경우
 		$("#likeBtn").on("click", function() {
 			// 자신이 작성한 글은 좋아요를 누를 수 없다.
@@ -113,36 +158,8 @@
 				dataType: "json",
 				data: {"boardNo" : $("#boardNo").val()},
 			});
-			/*
-			// 해당 게시글에 좋아요를 이미 눌렀는지 확인
-			if(false){
-				
-			} else {
-				alert("이미 좋아요를 누른 게시글입니다.");
-				return false;
-			}
-			*/
 		});
-		
-		/*
-		// Markdown Editor
-		var testEditor;
-		testEditor = editormd("test-editormd", {
-			width 		: "95%",
-			height 		: 640,
-			syncScrolling : "single",
-			path 		: '/static/js/lib/',
-			readOnly 	: true
-		});
-		// Preview 버튼이 눌렸을 때 실행
-		function hideCodeMirror(){
-			//testEditor.state.preview = true;
-			testEditor.codeMirror.hide();
-			//alert("preview 버튼이 눌렸습니다.");
-			//testEditor.previewing();
-		});
-		*/
-		
+		*/	
 	});
 	</script>
 </body>

@@ -7,7 +7,7 @@
 <html>
 <head>
 	<meta charset="UTF-8">
-	<title>게시글 수정</title>
+	<title>자유게시판</title>
 	<%@ include file="../include/header.jsp" %>
 </head>
 <body>
@@ -33,7 +33,7 @@
 						<option value="이야기" selected>이야기</option>
 						<option value="공지사항">공지사항</option>
 						<option value="질문">질문</option>
-						<option value="클래스">정보</option>
+						<option value="정보">정보</option>
 						<option value="그룹홍보">그룹홍보</option>	
 					</select>
 				</c:if>
@@ -42,7 +42,7 @@
 						<option value="이야기">이야기</option>
 						<option value="공지사항" selected>공지사항</option>
 						<option value="질문">질문</option>
-						<option value="클래스">정보</option>
+						<option value="정보">정보</option>
 						<option value="그룹홍보">그룹홍보</option>
 					</select>
 				</c:if>
@@ -51,7 +51,7 @@
 						<option value="이야기">이야기</option>
 						<option value="공지사항">공지사항</option>
 						<option value="질문" selected>질문</option>
-						<option value="클래스">정보</option>
+						<option value="정보">정보</option>
 						<option value="그룹홍보">그룹홍보</option>
 					</select>
 				</c:if>
@@ -59,9 +59,9 @@
 					<select id="category" name="category" class="form-control">
 						<option value="이야기">이야기</option>
 						<option value="공지사항">공지사항</option>
-						<option value="질문" >질문</option>
-						<option value="클래스"selected>정보</option>
-						<option value="질문">그룹홍보</option>
+						<option value="질문">질문</option>
+						<option value="정보"selected>정보</option>
+						<option value="그룹홍보">그룹홍보</option>
 					</select>
 				</c:if>
 				<c:if test="${detail.category == '그룹홍보'}">
@@ -69,7 +69,7 @@
 						<option value="이야기">이야기</option>
 						<option value="공지사항">공지사항</option>
 						<option value="질문">질문</option>
-						<option value="클래스">정보</option>
+						<option value="정보">정보</option>
 						<option value="그룹홍보" selected>그룹홍보</option>
 					</select>
 				</c:if>		
@@ -78,7 +78,7 @@
 		<div class="form-group">
 			<label class="control-label col-sm-2">작성자</label>
 			<div class="col-sm-3">
-				<input type="text" id="writer" name="writer" class="form-control" value="${detail.writer}" readonly="readonly" maxlength=16/>
+				<input type="text" id="writerName" name="writerName" class="form-control" value="${detail.writerName}(${member.name})" readonly="readonly" maxlength=16/>
 			</div>
 
 			<label class="control-label col-sm-2">작성일</label>
@@ -87,7 +87,7 @@
 			</div>
 		</div>
 		<div class="form-group">
-			<label class="control-label col-sm-2">제목</label>
+			<label class="control-label col-sm-2">제 목</label>
 			<div class="col-sm-8">
 				<input type="text" id="title" name="title" class="form-control" maxlength=50 value="${detail.title}"/>
 			</div>

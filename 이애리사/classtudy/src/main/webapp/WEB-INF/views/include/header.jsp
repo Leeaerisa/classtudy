@@ -23,19 +23,23 @@
 	font-style: normal;
 }
 @font-face {
-    font-family: 'IBMPlexSansKR-Regular';
-    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-07@1.0/IBMPlexSansKR-Regular.woff') format('woff');
-    font-weight: normal;
-    font-style: normal;
+	font-family: 'IBMPlexSansKR-Regular';
+	src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-07@1.0/IBMPlexSansKR-Regular.woff') format('woff');
+	font-weight: normal;
+	font-style: normal;
 }
 .container {
 	font-family: 'IBMPlexSansKR-Regular', sans-serif;
-	font-size: 1.1em;
+	font-size: 15px;
 	<%--
 	font-family: 'Nanum Gothic', sans-serif;
 	font-family: 'Noto Sans KR', sans-serif;
 	font-family: 'Noto Serif KR', serif;
 	--%>
+}
+#commentList {	
+	font-family: 'IBMPlexSansKR-Regular', sans-serif;
+	font-size: 14px;
 }
 .navbar-brand {
 	font-family: 'MaplestoryOTFBold', sans-serif;
@@ -44,7 +48,7 @@
 }
 .navbar-nav {
 	font-family: 'IBMPlexSansKR-Regular', sans-serif;
-	font-size: 1.15em;
+	font-size: 16px;
 }
 .dropdown-submenu {
 	position: relative;

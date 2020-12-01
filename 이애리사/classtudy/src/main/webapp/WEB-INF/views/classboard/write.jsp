@@ -14,7 +14,7 @@
 	<%@ include file="../include/topmenu.jsp" %>
 
 <div class="container" style="padding-bottom: 30px">
-	<form class="form-horizontal" action="/class/writeTIL" method="post">
+	<form class="form-horizontal" action="/class/write" method="post">
 		<header>
 			<h1>게시글 작성</h1><br>
 		</header>
@@ -37,7 +37,7 @@
 			<input type="hidden" id="lectureNo" name="lectureNo" class="form-control" value="${member.lectureNo}"/>
 		</div>
 		<div class="form-group">
-			<label class="control-label col-sm-2">제목</label>
+			<label class="control-label col-sm-2">제  목</label>
 			<div class="col-sm-8">
 				<input type="text" id="title" name="title" class="form-control" maxlength=50/>
 			</div>
@@ -47,12 +47,12 @@
 				<textarea style="display:none;" id="content" name="content"></textarea>
 			</div>
 		</div>
-		<div class="form-group">
+		<footer>
 			<div class="col-sm-12" style="text-align: center;">
 				<button type="button" class="btn btn-success" onclick="tilCheckForm(this.form)">등록</button>&nbsp;
 				<button type="button" class="btn btn-warning cancel">취소</button>
 			</div>
-		</div>
+		</footer>
 	</form>
 </div>
 	

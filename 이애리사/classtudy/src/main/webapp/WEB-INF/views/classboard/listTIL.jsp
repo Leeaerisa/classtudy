@@ -1,12 +1,12 @@
 <%@page import="java.util.Date"%>
 <%@ page session="true" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ page import="com.edu.domain.ClassboardDTO" %>
+<%@ page import="com.edu.classboard.domain.ClassboardDTO" %>
 <!DOCTYPE html>
 <html>
 <head>
 	<meta charset="UTF-8">
-	<title>내가 쓴 TIL</title>
+	<title>클래스룸 :: ${member.name}님의 TIL</title>
 	<%@ include file="../include/header.jsp" %>
 </head>
 <body>
@@ -31,14 +31,14 @@
 	//계산한 endPage가 실제 가지고 있는 페이지 수보다 많으면 가장 마지막 페이지의 값을 endPage로 한다.
 	if (endPage > pageCount) endPage = pageCount;
 	// 검색 여부에 따라 페이지 이동 버튼의 경로 다르게 설정
-	String paging = "TIL";
+	String paging = "class/classboard/myTIL";
 	if (request.getAttribute("nowKeyword") != null) {
-		paging = "searchTIL/" + (String)request.getAttribute("nowKeyword");
+		paging = "class/classboard/searchTIL/" + (int)request.getAttribute("searchCode") + "/" + (String)request.getAttribute("nowKeyword");
 	}
 	%>
-<div class="container">
+<div class="container" style="padding-bottom: 30px;">
 	<header>
-		<h1>내가 쓴 TIL</h1>
+		<h1>${member.name}님의 TIL</h1>
 	</header>
 	<!-- 상단 부분 테이블 형태로 구성 -->
 	<table style="width: 100%;">
@@ -46,7 +46,7 @@
 			<td align=left style="padding-bottom: 15px; padding-left: 20px;">
 				<div class="btn-group">	
 					<!-- 말머리 선택 불가, TIL 고정 -->
-					<select class="form-control" name="viewCategory" onchange="location.href='/class/classroom/' + this.value" disabled>
+					<select class="form-control" name="viewCategory" onchange="location.href='${path}/class/classboard/' + this.value" disabled>
 						<option value="all">전체</option>
 						<option value="TIL" selected>TIL</option>
 						<option value="클래스">클래스</option>
@@ -55,36 +55,34 @@
 				</div>
 			</td>
 			<td align=right style="padding-bottom: 15px; padding-right: 20px;">
-				<button class="btn btn-success" onclick="location.href='/class/writeTIL'">작성</button>
+				<button class="btn btn-default" onclick="location.href='${path}/class/classboard/myTIL'">전체보기</button>&nbsp;
+				<button class="btn btn-success" onclick="location.href='${path}/class/classboard/write/til'">작성</button>
 			</td>
 		</tr>
 	</table>
-	<!-- 
-	<div class="col-sm-12" style="text-align: right; padding-bottom: 10px;">
-		<button class="btn btn-success" 
-			onclick="location.href='/class/writeTIL'">작성</button>
-	</div>
-	 -->
 	<table class="table table-hover table-bordered">
 		<thead>
 			<tr>
 				<th style="text-align: center; width: 70px;" >번호</th>
-				<th style="text-align: center; width: 370px;">제목</th>
-				<th style="text-align: center; width: 100px;">작성자</th>
+				<th style="text-align: center; width: 470px;">제목</th>
 				<th style="text-align: center; width: 100px;">작성일</th>
 				<th style="text-align: center; width: 60px;" >조회</th>
 				<th style="text-align: center; width: 60px;" ><span class="glyphicon glyphicon-thumbs-up"></span></th>
 			</tr>
 		</thead>
 		<tbody>
+			<c:if test="${empty list}">
+				<tr style="background-color: #FFFFFF;">
+					<td colspan="5">게시글이 없습니다.</td>
+				</tr>
+			</c:if>
 			<c:forEach var="board" items="${list}">
 				<tr>
 					<td>${board.boardNo}</td>
 					<td>
-						<a href="/class/detail/${board.boardNo}">${board.title}</a>&nbsp;
-						<a href="#"><span class="badge badge-info">${board.commentNum}</span></a>
+						<a href="${path}/class/classboard/detail/${board.boardNo}/til">${board.title}</a>&nbsp;
+						<a href="${path}/class/classboard/detail/${board.boardNo}/til-comment"><span class="badge">${board.commentNum}</span></a>
 					</td>
-					<td>${member.name}</td>
 					<td><fmt:formatDate value="${board.writeDate}" pattern="yyyy-MM-dd"/></td>
 					<td>${board.views}</td>
 					<td>${board.likes}</td>
@@ -97,7 +95,27 @@
 		<tr>
 			<!-- 검색 -->
 			<td align=center style="padding-bottom: 15px;">
-				<div class="input-group col-sm-4">
+				<div class="input-group col-sm-5">
+					<div class="input-group-btn btn-group">
+						<!-- 검색 범위 선택 : 제목+내용, 제목, 내용, 작성자 -->
+						<select class="form-control" id="searchCode" name="searchCode" style="width: 110px;">
+							<c:if test="${searchCode == '1' || empty searchCode}">
+								<option value="1" selected>제목+내용</option>
+								<option value="2">제목</option>
+								<option value="3">내용</option>
+							</c:if>
+							<c:if test="${searchCode == '2'}">
+								<option value="1">제목+내용</option>
+								<option value="2" selected>제목</option>
+								<option value="3">내용</option>
+							</c:if>
+							<c:if test="${searchCode == '3'}">
+								<option value="1">제목+내용</option>
+								<option value="2">제목</option>
+								<option value="3" selected>내용</option>
+							</c:if>
+						</select>
+					</div>
 					<input type="text" id="keyword" name="keyword" class="form-control" value="${nowKeyword}" placeholder="검색어를 입력하세요." maxlength=50/>
 					<span class="input-group-btn">
 						<button class="btn btn-info" id="searchBtn"><span class="glyphicon glyphicon-search"></span></button>
@@ -114,14 +132,14 @@
 		//startPage가 pageBlock보다 큰 경우에만 << 버튼을 보여준다.
 		if(startPage > pageBlock) {
 			%>
-			<button type="button" class="btn btn-default" onclick="location.href='/class/<%=paging%>/<%=startPage - 1%>'">&lt;&lt;</button>
+			<button type="button" class="btn btn-default" onclick="location.href='${path}/<%=paging%>/<%=startPage - 1%>'">&lt;&lt;</button>
 			<%-- <a href="/class/TIL/<%= startPage - 1 %>">&lt;&lt;</a>&nbsp; --%>
 			<%
 		}
 		//pageNumber가 1보다 큰 경우에만 < 버튼을 보여준다.
 		if(pageNumber > 1) {
 			%>
-			<button type="button" class="btn btn-default" onclick="location.href='/class/<%=paging%>/<%=pageNumber - 1%>'">&lt;</button>
+			<button type="button" class="btn btn-default" onclick="location.href='${path}/<%=paging%>/<%=pageNumber - 1%>'">&lt;</button>
 			<%-- <a href="/class/TIL/<%= pageNumber - 1 %>">[이전]</a>&nbsp; --%>
 			<%
 		}
@@ -130,12 +148,12 @@
 		for(int num = startPage; num <= endPage; num++) {
 			if (num == pageNumber) {
 			%>
-			<button type="button" class="btn btn-success" onclick="location.href='/class/<%=paging%>/<%=num%>'"><%=num%></button>
+			<button type="button" class="btn btn-success" onclick="location.href='${path}/<%=paging%>/<%=num%>'"><%=num%></button>
 			<%-- <a style="color: #33ee33;" href="/class/TIL/<%=num%>">[<%=num%>]</a> --%>
 			<%
 			} else {
 			%>
-			<button type="button" class="btn btn-default" onclick="location.href='/class/<%=paging%>/<%=num%>'"><%=num%></button>
+			<button type="button" class="btn btn-default" onclick="location.href='${path}/<%=paging%>/<%=num%>'"><%=num%></button>
 			<%-- <a href="/class/TIL/<%= num %>">[<%= num %>]</a> --%>
 			<%
 			}
@@ -145,14 +163,14 @@
 		//pageNumber가 pageCount보다 작은 경우에만 > 버튼을 보여준다.
 		if(pageNumber < pageCount) {
 			%>
-			<button type="button" class="btn btn-default" onclick="location.href='/class/<%=paging%>/<%=pageNumber + 1%>'">&gt;</button>
+			<button type="button" class="btn btn-default" onclick="location.href='${path}/<%=paging%>/<%=pageNumber + 1%>'">&gt;</button>
 			<%-- <a href="/class/TIL/<%= pageNumber + 1 %>">[다음]</a>&nbsp; --%>
 			<%
 		}
 		//endPage가 pageCount보다 작은 경우에만 >> 버튼을 보여준다.
 		if(endPage < pageCount) {
 			%>
-			<button type="button" class="btn btn-default" onclick="location.href='/class/<%=paging%>/<%=endPage + 1%>'">&gt;&gt;</button>
+			<button type="button" class="btn btn-default" onclick="location.href='${path}/<%=paging%>/<%=endPage + 1%>'">&gt;&gt;</button>
 			<%-- <a href="/class/TIL/<%= endPage + 1 %>">&gt;&gt;</a> --%>
 			<%
 		}
@@ -167,14 +185,12 @@
 		
 		// 검색 버튼이 눌렸을 경우
 		$("#searchBtn").on("click", function() {
-			// 검색어가 입력되었는지 확인
-			if($("#keyword").val() != ""){
-				location.href="/class/searchTIL/" + $("#keyword").val();
-			} else {
-				alert("검색어를 입력해주세요.");
-				return false;
-			}
+			searchTIL($("#keyword").val(), $("#searchCode").val());
 		});
+		// 검색창에서 엔터키를 입력할 경우
+		$("#keyword").keyup(function(e) { if(e.keyCode == 13) {
+			searchTIL($("#keyword").val(), $("#searchCode").val());
+		}});
 		
 	});
 	</script>

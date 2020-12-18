@@ -1,7 +1,7 @@
-<%@page import="java.util.Date"%>
+<%@ page import="java.util.Date" %>
 <%@ page session="true" %>
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ page import="com.edu.domain.ClassboardDTO" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ page import="com.edu.classboard.domain.ClassboardDTO" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -31,12 +31,13 @@
 	//계산한 endPage가 실제 가지고 있는 페이지 수보다 많으면 가장 마지막 페이지의 값을 endPage로 한다.
 	if (endPage > pageCount) endPage = pageCount;
 	// 검색 여부에 따라 페이지 이동 버튼의 경로 다르게 설정
-	String paging = "classroom";
+	String paging = "class/classboard/" + (String)request.getAttribute("viewCategory");
 	if (request.getAttribute("nowKeyword") != null) {
-		paging = "search/" + (String)request.getAttribute("nowKeyword");
+		paging  = "class/classboard/search/" + (int)request.getAttribute("searchCode") + "/";
+		paging += (String)request.getAttribute("nowKeyword") + "/" + (String)request.getAttribute("viewCategory");
 	}
 	%>
-<div class="container">
+<div class="container" style="padding-bottom: 30px;">
 	<header>
 		<h1>클래스룸</h1>
 	</header>
@@ -44,9 +45,15 @@
 	<table style="width: 100%;">
 		<tr>
 			<td align=left style="padding-bottom: 15px; padding-left: 20px;">
-				<div class="btn-group">	
+				<div class="btn-group">
 					<!-- 말머리 선택 : 선택된 말머리의 글만 표시 -->
-					<select class="form-control" id="viewCategory" name="viewCategory" onchange="location.href='/class/classroom/' + this.value">
+					<c:if test="${empty nowKeyword}">
+						<c:set var="changePath" value="'${path}/class/classboard/' + this.value"/>
+					</c:if>
+					<c:if test="${!empty nowKeyword}">
+						<c:set var="changePath" value="'${path}/class/classboard/search/${searchCode}/${nowKeyword}/' + this.value"/>
+					</c:if>
+					<select class="form-control" id="viewCategory" name="viewCategory" onchange="location.href=${changePath}">
 						<c:if test="${viewCategory == 'all'}">
 							<option value="all" selected>전체</option>
 							<option value="TIL">TIL</option>
@@ -75,15 +82,11 @@
 				</div>
 			</td>
 			<td align=right style="padding-bottom: 15px; padding-right: 20px;">
-				<button class="btn btn-success" onclick="location.href='/class/write'">작성</button>
+				<button class="btn btn-default" onclick="location.href='${path}/class/classboard/all'">전체보기</button>&nbsp;
+				<button class="btn btn-success" onclick="location.href='${path}/class/classboard/write'">작성</button>
 			</td>
 		</tr>
 	</table>
-	<!-- 
-	<div class="col-sm-12" style="text-align: right; padding-bottom: 10px;">
-		<button class="btn btn-success" onclick="location.href='/class/write'">작성</button>
-	</div>
-	 -->
 	<table class="table table-hover table-bordered">
 		<thead>
 			<tr>
@@ -97,13 +100,18 @@
 			</tr>
 		</thead>
 		<tbody>
+			<c:if test="${empty list}">
+				<tr style="background-color: #FFFFFF;">
+					<td colspan="7">게시글이 없습니다.</td>
+				</tr>
+			</c:if>
 			<c:forEach var="board" items="${list}">
 				<tr>
 					<td>${board.boardNo}</td>
 					<td>${board.category}</td>
 					<td>
-						<a href="/class/detail/${board.boardNo}">${board.title}</a>&nbsp;
-						<a href="#"><span class="badge badge-info">${board.commentNum}</span></a>
+						<a href="${path}/class/classboard/detail/${board.boardNo}">${board.title}</a>&nbsp;
+						<a href="${path}/class/classboard/detail/${board.boardNo}/comment"><span class="badge">${board.commentNum}</span></a>
 					</td>
 					<td>${board.writerName}</td>
 					<td><fmt:formatDate value="${board.writeDate}" pattern="yyyy-MM-dd"/></td>
@@ -120,6 +128,34 @@
 			<td align=center style="padding-bottom: 15px;">
 				<div class="input-group col-sm-5">
 					<div class="input-group-btn btn-group">
+						<!-- 검색 범위 선택 : 제목+내용, 제목, 내용, 작성자 -->
+						<select class="form-control" id="searchCode" name="searchCode" style="width: 110px;">
+							<c:if test="${searchCode == '1' || empty searchCode}">
+								<option value="1" selected>제목+내용</option>
+								<option value="2">제목</option>
+								<option value="3">내용</option>
+								<option value="4">작성자</option>
+							</c:if>
+							<c:if test="${searchCode == '2'}">
+								<option value="1">제목+내용</option>
+								<option value="2" selected>제목</option>
+								<option value="3">내용</option>
+								<option value="4">작성자</option>
+							</c:if>
+							<c:if test="${searchCode == '3'}">
+								<option value="1">제목+내용</option>
+								<option value="2">제목</option>
+								<option value="3" selected>내용</option>
+								<option value="4">작성자</option>
+							</c:if>
+							<c:if test="${searchCode == '4'}">
+								<option value="1">제목+내용</option>
+								<option value="2">제목</option>
+								<option value="3">내용</option>
+								<option value="4" selected>작성자</option>
+							</c:if>
+						</select>
+						<%-- 
 						<!-- 말머리 선택 : 선택된 말머리의 글만 표시 -->
 						<select class="form-control" id="searchCategory" name="searchCategory" style="width: 90px;">
 							<c:if test="${viewCategory == 'all'}">
@@ -147,6 +183,7 @@
 								<option value="질문" selected>질문</option>
 							</c:if>
 						</select>
+						--%>
 					</div>
 					<input type="text" id="keyword" name="keyword" class="form-control" value="${nowKeyword}" placeholder="검색어를 입력하세요." maxlength=50/>
 					<span class="input-group-btn">
@@ -164,14 +201,14 @@
 		//startPage가 pageBlock보다 큰 경우에만 << 버튼을 보여준다.
 		if(startPage > pageBlock) {
 			%>
-			<button type="button" class="btn btn-default" onclick="location.href='/class/<%=paging%>/${viewCategory}/<%=startPage - 1%>'">&lt;&lt;</button>
+			<button type="button" class="btn btn-default" onclick="location.href='${path}/<%=paging%>/<%=startPage - 1%>'">&lt;&lt;</button>
 			<%-- <a href="/class/classroom/${viewCategory}/<%= startPage - 1 %>">&lt;&lt;</a>&nbsp; --%>
 			<%
 		}
 		//pageNumber가 1보다 큰 경우에만 < 버튼을 보여준다.
 		if(pageNumber > 1) {
 			%>
-			<button type="button" class="btn btn-default" onclick="location.href='/class/<%=paging%>/${viewCategory}/<%=pageNumber - 1%>'">&lt;</button>
+			<button type="button" class="btn btn-default" onclick="location.href='${path}/<%=paging%>/<%=pageNumber - 1%>'">&lt;</button>
 			<%-- <a href="/class/classroom/${viewCategory}/<%= pageNumber - 1 %>">[이전]</a> --%>
 			<%
 		}
@@ -180,12 +217,12 @@
 		for(int num = startPage; num <= endPage; num++) {
 			if (num == pageNumber) {
 			%>
-			<button type="button" class="btn btn-success" onclick="location.href='/class/<%=paging%>/${viewCategory}/<%=num%>'"><%=num%></button>
+			<button type="button" class="btn btn-success" onclick="location.href='${path}/<%=paging%>/<%=num%>'"><%=num%></button>
 			<%-- <a style="color: #33ee33;" href="/class/classroom/${viewCategory}/<%= num %>">[<%= num %>]</a> --%>
 			<%
 			} else {
 			%>
-			<button type="button" class="btn btn-default" onclick="location.href='/class/<%=paging%>/${viewCategory}/<%=num%>'"><%=num%></button>
+			<button type="button" class="btn btn-default" onclick="location.href='${path}/<%=paging%>/<%=num%>'"><%=num%></button>
 			<%-- <a href="/class/classroom/${viewCategory}/<%= num %>">[<%= num %>]</a> --%>
 			<%
 			}
@@ -195,14 +232,14 @@
 		//pageNumber가 pageCount보다 작은 경우에만 > 버튼을 보여준다.
 		if(pageNumber < pageCount) {
 			%>
-			<button type="button" class="btn btn-default" onclick="location.href='/class/<%=paging%>/${viewCategory}/<%=pageNumber + 1%>'">&gt;</button>
+			<button type="button" class="btn btn-default" onclick="location.href='${path}/<%=paging%>/<%=pageNumber + 1%>'">&gt;</button>
 			<%-- <a href="/class/classroom/${viewCategory}/<%= pageNumber + 1 %>">[다음]</a>&nbsp; --%>
 			<%
 		}
 		//endPage가 pageCount보다 작은 경우에만 >> 버튼을 보여준다.
 		if(endPage < pageCount) {
 			%>
-			<button type="button" class="btn btn-default" onclick="location.href='/class/<%=paging%>/${viewCategory}/<%=endPage + 1%>'">&gt;&gt;</button>
+			<button type="button" class="btn btn-default" onclick="location.href='${path}/<%=paging%>/<%=endPage + 1%>'">&gt;&gt;</button>
 			<%-- <a href="/class/classroom/${viewCategory}/<%= endPage + 1 %>">&gt;&gt;</a> --%>
 			<%
 		}
@@ -225,17 +262,15 @@
 				location.href="/class/search/" + "${nowKeyword}" + "/" + $("#viewCategory").val();
 			}
 		});
-		*/		
+		*/
 		// 검색 버튼이 눌렸을 경우
 		$("#searchBtn").on("click", function() {
-			// 검색어가 입력되었는지 확인
-			if($("#keyword").val() != ""){
-				location.href="/class/search/" + $("#keyword").val() + "/" + $("#searchCategory").val();
-			} else {
-				alert("검색어를 입력해주세요.");
-				return false;
-			}
+			searchBoard($("#keyword").val(), $("#searchCode").val(), $("#viewCategory").val());
 		});
+		// 검색창에서 엔터키를 입력할 경우
+		$("#keyword").keyup(function(e) { if(e.keyCode == 13) {
+			searchBoard($("#keyword").val(), $("#searchCode").val(), $("#viewCategory").val());
+		}});
 		
 	});
 	</script>
